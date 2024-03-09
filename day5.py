@@ -98,7 +98,6 @@ def compute_part_two_b(file_name: str) -> int:
     print(f"{seed_ranges= }")
 
     minimum_location = sys.maxsize
-    # for seed_range in seed_ranges:
     while seed_ranges:
         seed_range = seed_ranges.pop()
         seed0_org = seed0 = seed_range[0]
@@ -108,21 +107,19 @@ def compute_part_two_b(file_name: str) -> int:
             seed0_prev, seed1_prev = seed0, seed1
             seed0 = convert(seed0, m)
             seed1 = convert(seed1, m)
-            if (seed0_prev - seed0) != (seed1_prev - seed1):
+            if (seed0_prev - seed0) != (seed1_prev - seed1):  # split the original range in 2 parts
                 mid = (seed0_org + seed1_org) // 2
                 seed_ranges.append([seed0_org, mid])
                 seed_ranges.append([mid + 1, seed1_org])
-                # print(f"{seed_ranges= }")
                 break_found = True
                 break
         if not break_found:
             minimum_location = min(minimum_location, seed0, seed1)
-            # print(f'{minimum_location= }')
     return minimum_location
 
 
 if __name__ == '__main__':
     print(f"Part I: {compute_part_one('input/input5.txt')}")
-    # print(f"Part II: {compute_part_two('input/input5.txt')}")
+    # print(f"Part II: {compute_part_two('input/input5.txt')}") # only works for small test-sets; brute force
     print(f"Part IIb: {compute_part_two_b('input/input5.txt')}")
 
