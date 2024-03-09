@@ -33,7 +33,7 @@ def compute_part_two(list_of_numbers: list) -> int:
     return sum(running_number_of_scratch_cards)
 
 
-def compute_part_one(file_name: str) -> int:
+def compute_part_one(file_name: str) -> tuple[int, list]:
     cards = read_input_file(file_name)
     total_scratchcards_value = 0
     list_of_numbers = []
