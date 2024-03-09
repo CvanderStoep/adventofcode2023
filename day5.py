@@ -116,8 +116,6 @@ def compute_part_two_b(file_name: str) -> int:
                 break_found = True
                 break
         if not break_found:
-            if min(seed1, seed0) < minimum_location:
-                print(f'{seed0_org= }, {seed1_org= }, {seed0= }, {seed1= }')
             minimum_location = min(minimum_location, seed0, seed1)
             # print(f'{minimum_location= }')
     return minimum_location
