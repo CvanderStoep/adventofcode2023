@@ -3,7 +3,7 @@ import sys
 from dataclasses import dataclass
 
 
-def read_input_file(file_name: str) -> tuple[list, list, list]:
+def read_input_file(file_name: str) -> tuple:
     with open(file_name) as f:
         content = f.read().split("\n\n")
     almanac = []
@@ -55,5 +55,26 @@ def compute_part_one(file_name: str) -> int:
     return minimum_location
 
 
+def compute_part_two(file_name: str) -> int:
+    seeds, almanac = read_input_file(file_name)
+    start_seeds = seeds[::2]
+    total_seeds = seeds[1::2]
+    seeds = []
+    for index, s in enumerate(start_seeds):
+        for j in range(total_seeds[index]):
+            seeds.append(s + j)
+    print('...running...')
+    # TODO takes way too long and runs out of memory; if only it was so easy
+
+    minimum_location = sys.maxsize
+    for seed in seeds:
+        seed_map = seed
+        for m in almanac:
+            seed_map = convert(seed_map, m)
+        minimum_location = min(minimum_location, seed_map)
+    return minimum_location
+
+
 if __name__ == '__main__':
     print(f"Part I: {compute_part_one('input/input5.txt')}")
+    print(f"Part I: {compute_part_two('input/input5.txt')}")

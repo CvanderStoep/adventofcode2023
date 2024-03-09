@@ -25,8 +25,10 @@ def read_input_file(file_name: str) -> list:
 
 def compute_part_two(list_of_numbers: list) -> int:
     running_number_of_scratch_cards = [1]*len(list_of_numbers)
+    max_index = len(running_number_of_scratch_cards)
     for i in range(len(list_of_numbers)):
-        for j in range(i+1, i + 1 + list_of_numbers[i]): # TODO check maximum index of j, can run out of bounds
+        # for j in range(i+1, i + 1 + list_of_numbers[i]): # DONE check maximum index of j, can run out of bounds
+        for j in range(i + 1, min(i + 1 + list_of_numbers[i], max_index)):
             running_number_of_scratch_cards[j] += running_number_of_scratch_cards[i]
     return sum(running_number_of_scratch_cards)
 
