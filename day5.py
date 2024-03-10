@@ -39,6 +39,14 @@ class Map:
     categories: list[Category]
 
 
+def intervals(local_map: Map) -> list[int]:
+    ranges = []
+    for category in local_map.categories:
+        ranges.append(category.source)
+        ranges.append(category.source + category.range -1)
+    return ranges
+
+
 def convert(seed: int, local_map: Map) -> int:
     destination = seed
     for category in local_map.categories:
@@ -97,17 +105,25 @@ def compute_part_two_b(file_name: str) -> int:
         seed_ranges.append([seeds[i], seeds[i] + seeds[i + 1] - 1])
     print(f"{seed_ranges= }")
 
+    for m in almanac:
+        print(intervals(m))
+
     minimum_location = sys.maxsize
     while seed_ranges:
+        print(f"{seed_ranges= }")
         seed_range = seed_ranges.pop()
         seed0_org = seed0 = seed_range[0]
         seed1_org = seed1 = seed_range[1]
+        seedm = (seed0 + seed1) // 2
         break_found = False
         for m in almanac:
-            seed0_prev, seed1_prev = seed0, seed1
+            seed0_prev, seed1_prev, seedm_prev = seed0, seed1, seedm
             seed0 = convert(seed0, m)
             seed1 = convert(seed1, m)
-            if (seed0_prev - seed0) != (seed1_prev - seed1):  # split the original range in 2 parts
+            seedm = convert(seedm, m)
+
+            if not ((seed0_prev - seed0) == (seed1_prev - seed1) == (
+                    seedm_prev - seedm)):  # split the original range in 2 parts
                 mid = (seed0_org + seed1_org) // 2
                 seed_ranges.append([seed0_org, mid])
                 seed_ranges.append([mid + 1, seed1_org])
@@ -122,4 +138,3 @@ if __name__ == '__main__':
     print(f"Part I: {compute_part_one('input/input5.txt')}")
     # print(f"Part II: {compute_part_two('input/input5.txt')}") # only works for small test-sets; brute force
     print(f"Part IIb: {compute_part_two_b('input/input5.txt')}")
-
