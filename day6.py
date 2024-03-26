@@ -28,17 +28,14 @@ def read_input_file(file_name: str) -> list[Race]:
 def compute_part_one(file_name: str) -> int:
     races = read_input_file(file_name)
     overall_product = 1
-    # for total_time, record_distance in zip(times, distances):
     for race in races:
         total_time = race.time
         record_distance = race.distance
         record_broken = 0
         for button in range(total_time + 1):
             distance = (total_time - button) * button
-            # print(f'{total_time= }, {distance= }, {record_distance= }')
             if distance > record_distance:
                 record_broken += 1
-        # print(f'{record_broken= }')
         overall_product *= record_broken
 
     return overall_product
@@ -50,20 +47,16 @@ def compute_part_two(file_name: str) -> int:
     total_time = ""
     record_distance = ""
     for race in races:
-        total_time = total_time + str(race.time)
-        record_distance = record_distance + str(race.distance)
+        total_time += str(race.time)
+        record_distance += str(race.distance)
     total_time = int(total_time)
     record_distance = int(record_distance)
     record_broken = 0
     print(f'{total_time= }')
     for button in range(total_time + 1):
-        # if button %1000000 == 0:
-        #     print(f'{button= }')
         distance = (total_time - button) * button
-        # print(f'{total_time= }, {distance= }, {record_distance= }')
         if distance > record_distance:
             record_broken += 1
-    # print(f'{record_broken= }')
     overall_product *= record_broken
 
     return overall_product

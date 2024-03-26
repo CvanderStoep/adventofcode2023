@@ -42,9 +42,26 @@ class Map:
 def intervals(local_map: Map) -> list[int]:
     ranges = []
     for category in local_map.categories:
-        ranges.append(category.source)
-        ranges.append(category.source + category.range -1)
+        ranges.append([category.source, category.source + category.range - 1])
     return ranges
+
+
+def intersects(seed_range: list, interval: list) -> bool:
+    if seed_range[1] < interval[0]:
+        return False
+    if seed_range[0] > interval[1]:
+        return False
+    if seed_range[0] > interval[0] and seed_range[1] < interval[1]:
+        return False
+    return True
+
+
+def split_range(seed_range: list, interval: list) -> list:
+    """"not used yet, future improvement"""
+    if seed_range[0] <= interval[1] <= seed_range[1]:
+        return [seed_range[0], interval[1]], [interval[1], seed_range[1]]
+    else:
+        return [seed_range[0], interval[0]], [interval[0], seed_range[1]]
 
 
 def convert(seed: int, local_map: Map) -> int:
@@ -64,8 +81,11 @@ def compute_part_one(file_name: str) -> int:
         # print(f'{seed_map= }')
         for m in almanac:
             seed_map = convert(seed_map, m)
-            # print(f'{seed_map= }')
+            # print(f'{seed= }, {seed_map= }')
         minimum_location = min(minimum_location, seed_map)
+
+    # for seed in range(100):
+    #     print(f'{seed= }, {convert(seed, almanac[0])}')
     return minimum_location
 
 
@@ -103,14 +123,14 @@ def compute_part_two_b(file_name: str) -> int:
 
     for i in range(0, len(seeds), 2):
         seed_ranges.append([seeds[i], seeds[i] + seeds[i + 1] - 1])
-    print(f"{seed_ranges= }")
+    # print(f"{seed_ranges= }")
 
-    for m in almanac:
-        print(intervals(m))
+    # for m in almanac:
+    #     print(f'{intervals(m)= }')
 
     minimum_location = sys.maxsize
     while seed_ranges:
-        print(f"{seed_ranges= }")
+        # print(f"{seed_ranges= }")
         seed_range = seed_ranges.pop()
         seed0_org = seed0 = seed_range[0]
         seed1_org = seed1 = seed_range[1]
@@ -134,7 +154,44 @@ def compute_part_two_b(file_name: str) -> int:
     return minimum_location
 
 
+def compute_part_two_c(file_name: str) -> int:
+    seeds, almanac = read_input_file(file_name)
+    seed_ranges = []
+
+    for i in range(0, len(seeds), 2):
+        seed_ranges.append([seeds[i], seeds[i] + seeds[i + 1] - 1])
+
+    minimum_location = sys.maxsize
+    while seed_ranges:
+        # print(f"{seed_ranges= }")
+        seed_range = seed_ranges.pop()
+        seed0_org = seed0 = seed_range[0]
+        seed1_org = seed1 = seed_range[1]
+        break_found = False
+        temp_seed_stack = [[seed0, seed1]]
+        for m in almanac:
+            for interval in intervals(m):
+                if intersects([seed0, seed1], interval) and seed0 != seed1:
+                    mid = (seed0_org + seed1_org) // 2
+                    seed_ranges.append([seed0_org, mid])
+                    seed_ranges.append([mid + 1, seed1_org])
+                    break_found = True
+                    break  # break out of interval loop
+            if break_found:
+                break  # also break out of almanac loop
+            seed0 = convert(seed0, m)
+            seed1 = convert(seed1, m)
+            temp_seed_stack.append([seed0, seed1])
+        if not break_found:
+            if seed0 < minimum_location or seed1 < minimum_location:
+                seed_stack = temp_seed_stack.copy()
+            minimum_location = min(minimum_location, seed0, seed1)
+    pass
+    return minimum_location
+
+
 if __name__ == '__main__':
     print(f"Part I: {compute_part_one('input/input5.txt')}")
-    # print(f"Part II: {compute_part_two('input/input5.txt')}") # only works for small test-sets; brute force
+    # print(f"Part II: {compute_part_two('input/input5.txt')}")  # only works for small test-sets; brute force
     print(f"Part IIb: {compute_part_two_b('input/input5.txt')}")
+    print(f"Part IIc: {compute_part_two_c('input/input5.txt')}")
