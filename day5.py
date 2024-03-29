@@ -67,7 +67,7 @@ def split_range(seed_range: list, interval: list) -> list:
 def convert(seed: int, local_map: Map) -> int:
     destination = seed
     for category in local_map.categories:
-        if category.source <= seed <= category.source + category.range:
+        if category.source <= seed < category.source + category.range:
             destination = category.destination + seed - category.source
             break
     return destination
@@ -168,7 +168,7 @@ def compute_part_two_c(file_name: str) -> int:
         seed0_org = seed0 = seed_range[0]
         seed1_org = seed1 = seed_range[1]
         break_found = False
-        temp_seed_stack = [[seed0, seed1]]
+        # temp_seed_stack = [[seed0, seed1]]
         for m in almanac:
             for interval in intervals(m):
                 if intersects([seed0, seed1], interval) and seed0 != seed1:
@@ -181,10 +181,10 @@ def compute_part_two_c(file_name: str) -> int:
                 break  # also break out of almanac loop
             seed0 = convert(seed0, m)
             seed1 = convert(seed1, m)
-            temp_seed_stack.append([seed0, seed1])
+            # temp_seed_stack.append([seed0, seed1])
         if not break_found:
-            if seed0 < minimum_location or seed1 < minimum_location:
-                seed_stack = temp_seed_stack.copy()
+            # if seed0 < minimum_location or seed1 < minimum_location:
+            #     seed_stack = temp_seed_stack.copy()
             minimum_location = min(minimum_location, seed0, seed1)
     pass
     return minimum_location
@@ -195,3 +195,4 @@ if __name__ == '__main__':
     # print(f"Part II: {compute_part_two('input/input5.txt')}")  # only works for small test-sets; brute force
     print(f"Part IIb: {compute_part_two_b('input/input5.txt')}")
     print(f"Part IIc: {compute_part_two_c('input/input5.txt')}")
+

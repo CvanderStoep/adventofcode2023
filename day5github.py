@@ -51,6 +51,7 @@ def calculate_lowest_location(file_path):
     smallest = sys.maxsize
     for i, seed_range in enumerate(seeds):
         ranges = [seed_range]
+        print(f'{ranges= }')
         for j, mapping in enumerate(mappings):
             new_ranges = []
             while ranges:
@@ -79,6 +80,7 @@ def calculate_lowest_location(file_path):
             print(f"Mapping Stage {j+1} for Seed {i+1}: {ranges}")
 
         smallest = min(smallest, min([r.start for r in ranges]))
+        print(([r.start for r in ranges]))
 
     print(f"Part 2: {smallest}")
 
