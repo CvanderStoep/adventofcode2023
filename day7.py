@@ -3,8 +3,10 @@ from collections import Counter
 from dataclasses import dataclass, field
 from operator import itemgetter
 
+# regular card order (part I of the puzzle)
 card_order = {"A": 14, "K": 13, "Q": 12, "J": 11, "T": 10, "9": 9, "8": 8, "7": 7,
               "6": 6, "5": 5, "4": 4, "3": 3, "2": 2}
+# in case of a Joker J, the value of J will be 1 (part II of the puzzle)
 
 
 @dataclass
