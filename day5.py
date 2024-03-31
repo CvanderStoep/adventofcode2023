@@ -116,7 +116,7 @@ def compute_part_two_b(file_name: str) -> int:
     determine transformed ranges [c, d]
         when linear, move to next mapping (c-a == d-b)
         when not linear, split the existing range in two parts [a, m] & [m, b] and repeat
-        #TODO I found 137516821 iso 137516820, not been able to find bug so far.
+        #DONE I found 137516821 iso 137516820, not been able to find bug so far; bug fixed.
     """
     seeds, almanac = read_input_file(file_name)
     seed_ranges = []
