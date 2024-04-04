@@ -13,7 +13,7 @@ card_order = {"A": 14, "K": 13, "Q": 12, "J": 11, "T": 10, "9": 9, "8": 8, "7": 
 class Hand:
     cards: str
     bid: int
-    type: int = 1  # = field(default=1)
+    type: int = 1
 
     def __post_init__(self):
         card_count = {i: self.cards.count(i) for i in self.cards}
@@ -89,7 +89,7 @@ def joker_evaluation(hand: Hand) -> None:
 
 
 def sort_hands(hand_types: list) -> list:
-    """"sort the hands based first on hand-type and than on card-order 0-4"""
+    """"sort the hands based first on hand-type and then on card-order 0-4"""
     hand_types_sorted = sorted(hand_types, key=lambda x: (x[1], card_order[x[0].cards[0]],
                                                           card_order[x[0].cards[1]],
                                                           card_order[x[0].cards[2]],
