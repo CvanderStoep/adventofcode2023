@@ -1,4 +1,3 @@
-# created by virtualenv automatically
 # PyCharm
 .idea/*
 
@@ -7,3 +6,6 @@
 
 # Caches
 __pycache__/
+
+# Byte code
+*.pyc
