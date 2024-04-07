@@ -37,7 +37,7 @@ def compute_part_two(file_name: str) -> int:
     oasis = read_input_file(file_name)
     sum_extrapolated_values = 0
     # by adding the (-1) ^depth * first values of all intermediate sequence, the prediction is found
-    # a0 = a1 - b1 + c1 - d1 ...  (a is original series, b is first differences, c i second ...
+    # a0 = a1 - b1 + c1 - d1 ...  (a is original series, b is first differences, c is second ...
     for numbers in oasis:
         extrapolated_value = numbers[0]
         depth = 0
