@@ -1,6 +1,4 @@
 import re
-from itertools import cycle
-from math import lcm
 
 
 def read_input_file(file_name: str) -> list:
