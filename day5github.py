@@ -84,5 +84,6 @@ def calculate_lowest_location(file_path):
 
     print(f"Part 2: {smallest}")
 
+
 file_path = "input/input5.txt"
 calculate_lowest_location(file_path)

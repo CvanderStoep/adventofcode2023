@@ -195,4 +195,3 @@ if __name__ == '__main__':
     # print(f"Part II: {compute_part_two('input/input5.txt')}")  # only works for small test-sets; brute force
     print(f"Part IIb: {compute_part_two_b('input/input5.txt')}")
     print(f"Part IIc: {compute_part_two_c('input/input5.txt')}")
-

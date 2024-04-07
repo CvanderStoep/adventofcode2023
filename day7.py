@@ -1,6 +1,5 @@
-import re
 from collections import Counter
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from operator import itemgetter
 
 # regular card order (part I of the puzzle)

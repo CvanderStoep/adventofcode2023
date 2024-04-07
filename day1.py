@@ -49,9 +49,6 @@ def read_and_translate_file2(file_name: str) -> List[int]:
     with open(file_name) as f:
         content = f.read().splitlines()
     pattern = "[0-9]"
-    digit_in_letters = "(one|two|three|four|five|six|seven|eight|nine)"
-    translation_dictionary = {"one": "1", "two": "2", "three": "3", "four": "4", "five": "5",
-                              "six": "6", "seven": "7", "eight": "8", "nine": "9"}
 
     number_list = []
     for line in content:
@@ -77,6 +74,8 @@ def compute_part_one(file_name: str) -> int:
 def compute_part_two(file_name: str) -> int:
     calibration_values = read_and_translate_file(file_name)
     return sum(calibration_values)
+
+
 def compute_part_twob(file_name: str) -> int:
     calibration_values = read_and_translate_file2(file_name)
     return sum(calibration_values)

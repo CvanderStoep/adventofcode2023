@@ -2,7 +2,6 @@
 advent of code 2023
 https://adventofcode.com/2023
 """
-import re
 from typing import List
 
 

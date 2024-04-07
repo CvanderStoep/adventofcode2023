@@ -27,7 +27,6 @@ def read_input_file(file_name: str) -> tuple[list, list, list]:
     for line in content:
         for match in re.finditer(r'(\d+)', line):
             part_numbers.append([int(match.group()), engine_line, match.start(), match.end()])
-            part_number = PartNumber(int(match.group()), engine_line, match.start(), match.end())
         for match in re.finditer(r'[^0-9\.]', line):
             part_symbols.append([engine_line, match.start()])
             part2_symbols.append([engine_line, match.start(), match.group()])

@@ -2,7 +2,7 @@ import re
 
 
 def read_input_file(file_name: str) -> list:
-    pattern = "[+-]?\d+"
+    pattern = r"[+-]?\d+"
     oasis = []
 
     with open(file_name) as f:
