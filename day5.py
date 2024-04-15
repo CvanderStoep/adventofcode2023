@@ -99,7 +99,8 @@ def compute_part_two(file_name: str) -> int:
         for j in range(total_seeds[index]):
             seeds.append(s + j)
     print('...running...')
-    # TODO takes way too long and runs out of memory; if only it was so easy
+    # DONE takes way too long and runs out of memory; if only it was so easy
+    # see compute_part_two_c
 
     minimum_location = sys.maxsize
     for seed in seeds:
