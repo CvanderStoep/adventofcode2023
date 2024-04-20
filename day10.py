@@ -1,5 +1,6 @@
 import queue
 from dataclasses import dataclass
+
 # import re
 
 """see also day12 (aoc2022) and day24
@@ -27,8 +28,10 @@ class Node:
 
 
 def surrounding(grid, x: int, y: int) -> list:
+    """return a list of surrounding neighbours"""
     vals = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
-    return [(x_i, y_i) for (x_i, y_i) in vals if 0 <= x_i < len(grid[x]) and 0 <= y_i < len(grid)]
+    # print(f'{x= }, {y= }, {vals= }, {len(grid[0])= }, {len(grid)= }')
+    return [(x_i, y_i) for (x_i, y_i) in vals if 0 <= x_i < len(grid[0]) and 0 <= y_i < len(grid)]
 
 
 def read_input_file(file_name: str) -> list:
@@ -76,8 +79,9 @@ def grid_to_nodes_dictionary(grid) -> list:
     return nodes
 
 
-# check if valid neighbours (i, j), (x, y) TODO
+# check if valid neighbours (i, j), (x, y)
 def valid_neighbours(node1: Node, node2: Node) -> bool:
+    """are two nodes connected by the correct pipe type"""
     if node1.tile == "." or node2.tile == ".":
         return False
 
@@ -99,6 +103,7 @@ def valid_neighbours(node1: Node, node2: Node) -> bool:
 
 
 def print_maze_grid(grid):
+    """prints a small porting of the grid around the starting positions"""
     rows, cols = grid_size(grid)
     i_s, j_s = find_start(grid)
     for j in range(j_s - 1, j_s + 2):  # rows
@@ -107,7 +112,18 @@ def print_maze_grid(grid):
         print()
 
 
+def print_full_maze_grid(grid):
+    """prints the full grid"""
+    rows, cols = grid_size(grid)
+    i_s, j_s = find_start(grid)
+    for j in range(rows):  # rows
+        for i in range(cols):  # cols
+            print(grid[j][i], end="")
+        print()
+
+
 def print_maze_dict(nodes_dict, grid):
+    """prints the full grid (depth of the nodes)"""
     rows, cols = grid_size(grid)
 
     for j in range(rows):
@@ -115,6 +131,36 @@ def print_maze_dict(nodes_dict, grid):
             node = nodes_dict[(i, j)]
             print(node.depth, end="")
         print()
+
+
+def node_inside(nodes_dict, grid, node: Node) -> bool:
+    """check whether a nodes is inside or outside a closed loop by counting the number of crossings
+     by walking towards the end of the grid; in this case diagonally"""
+    rows, cols = grid_size(grid)
+
+    node_i = node.i
+    node_j = node.j
+
+    if node_j == rows-1:
+        pass
+    if node_i == 0 or node_i == cols-1 or node_j == 0 or node_j == rows-1:
+        return False
+
+    number_of_crossings = 0
+    while node_i < cols and node_j < rows:
+        running_node = nodes_dict[(node_i, node_j)]
+        # print(node_i, node_j, running_node.depth)
+        node_i += 1
+        node_j += 1
+        if running_node.tile not in ".L7" and running_node.depth != 0:
+            number_of_crossings += 1
+
+    # print(f'{number_of_crossings= }')
+
+    if number_of_crossings % 2 == 0:
+        return False
+
+    return True
 
 
 def find_start(grid) -> (int, int):
@@ -131,10 +177,8 @@ def find_start(grid) -> (int, int):
 
 def compute_part_one(file_name: str) -> int:
     grid = read_input_file(file_name)
-    print_maze_grid(grid)
 
     start_i, start_j = find_start(grid)
-    # print(f'{start_i= }, {start_j= }')
     grid[start_j][start_i] = "-"
 
     nodes_dict = grid_to_nodes_dictionary(grid)
@@ -158,13 +202,54 @@ def compute_part_one(file_name: str) -> int:
     for node in nodes_dict.values():
         max_depth = max(max_depth, node.depth)
 
-    # print_maze_dict(nodes_dict, grid)
-
-    # print(f'{max_depth= }')
-
     return max_depth
+
+
+def compute_part_two(file_name: str) -> int:
+    grid = read_input_file(file_name)
+
+    start_i, start_j = find_start(grid)
+    grid[start_j][start_i] = "-"
+
+    nodes_dict = grid_to_nodes_dictionary(grid)
+
+    node = nodes_dict[(start_i, start_j)]
+    node.visited = True
+    node.depth = 0
+    node_queue = queue.Queue()
+    node_queue.put(node)
+
+    while not node_queue.empty():
+        node = node_queue.get()
+        for sr in node.neighbours:
+            if not sr.visited:
+                sr.visited = True
+                sr.depth = node.depth + 1
+                node_queue.put(sr)
+
+    max_depth = 0
+    for node in nodes_dict.values():
+        max_depth = max(max_depth, node.depth)
+
+    node = nodes_dict[(start_i, start_j)]
+    node.depth = -1  # set the depth of the starting node = -1 to avoid seeing it as a .
+
+    number_inside_nodes = 0
+    rows, cols = grid_size(grid)
+    for j in range(rows):
+        for i in range(cols):
+            node = nodes_dict[(i, j)]
+            if node.depth == 0:
+                inside = node_inside(nodes_dict, grid, node)
+                if inside:
+                    grid[j][i] = "I"
+                    number_inside_nodes += 1
+                else:
+                    grid[j][i] = "O"
+
+    return number_inside_nodes
 
 
 if __name__ == '__main__':
     print(f"Part I: {compute_part_one('input/input10.txt')}")
-    # print(f"Part II: {compute_part_two('input/input10.txt')}")
+    print(f"Part II: {compute_part_two('input/input10.txt')}")
