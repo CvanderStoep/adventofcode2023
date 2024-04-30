@@ -39,7 +39,6 @@ def image_to_galaxies(image) -> list:
     galaxies = []
     for j in range(rows):
         for i in range(cols):
-            # if image[j] == ["."] * cols:
             if image[j][i] == "#":
                 galaxy = Galaxy(i, j)
                 galaxies.append(galaxy)
