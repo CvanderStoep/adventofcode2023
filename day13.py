@@ -1,7 +1,7 @@
 """
 create list of patterns
 pattern = [#.##..##.] as list
-patterns = [pattern1, pattern2] as list of lists
+patterns = [pattern1, pattern2, ...] as list of lists
 """
 from copy import deepcopy
 
@@ -48,7 +48,8 @@ def horizontal_mirror(pattern: list) -> int:
 
 
 def horizontal_mirror2(pattern: list) -> list:
-    """"returns the mirror row number or 0 if none exists; return row + 1 because the puzzle starts counting at 1"""
+    """"returns a list of mirror row numbers or [] if none exists; return row + 1 because the puzzle starts counting
+    at 1"""
     rows, cols = pattern_size(pattern)
 
     mirror_rows = []
