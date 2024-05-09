@@ -102,7 +102,7 @@ def compute_part_two(file_name: str) -> int:
     print(f'{len(repetition)= }, {repetition= }')
 
     total_load_number = (1_000_000_000 - len(preamble)) % len(repetition)
-    print(f'{total_load_number= }')
+    # print(f'{total_load_number= }')
     total_load = repetition[total_load_number - 1]
 
     return total_load
@@ -110,7 +110,7 @@ def compute_part_two(file_name: str) -> int:
 
 def find_pattern(data: list[int]) -> tuple[list[int], list[int]]:
     """"
-    find pattern in a list of numbers
+    find pattern in a list of numbers, example:
     a = [1, 1, 5, 6, 5, 6, 5, 6, 8, 9, 11, 12, 12, 11, 12, 12, 11, 12, 12]
     preamble = [1, 1, 5, 6, 5, 6, 5, 6, 8, 9]
     repetition = [11, 12, 12]
