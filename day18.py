@@ -1,4 +1,10 @@
 from shapely.geometry.polygon import *
+from shapely import Polygon
+
+""""
+part I was solved by making the outside trench and counting the inside area
+part II was solved using the shoelace or surveyor's formula.
+"""
 
 
 def read_input_file(file_name: str) -> list:
@@ -12,12 +18,13 @@ def read_input_file(file_name: str) -> list:
         items[2] = items[2][1:-1]  # remove first & last element
         plan.append(items)
 
-    # print(plan)
-
     return plan
 
 
 def read_input_file2(file_name: str) -> list:
+    """"
+    R 6 (#70c710) -> 0 #70c710 -> R 461936
+    """
     directions = {0: "R", 1: "D", 2: "L", 3: "U"}
 
     with open(file_name) as f:
@@ -30,18 +37,14 @@ def read_input_file2(file_name: str) -> list:
         items[2] = items[2][1:-1]  # remove first & last element
         direction = int(items[2][-1])
         distance = int(items[2][1:-1], 16)
-        # print(direction, distance, items[2][1:-1])
         items[0] = directions[direction]
         items[1] = distance
-        # print(items)
         plan.append(items)
-
-    # print(plan)
 
     return plan
 
 
-def dig_trench(lagoon: set, dig: list, position: tuple) -> set:
+def dig_trench(lagoon: set, dig: list, position: tuple) -> tuple:
     directions = {"R": (1, 0), "L": (-1, 0), "U": (0, -1), "D": (0, 1)}
     direction, steps = dig[0], dig[1]
     dx, dy = position[0], position[1]
@@ -138,7 +141,7 @@ def compute_part_one(file_name: str) -> int:
     for dig in dig_plan:
         start = dig_trench(lagoon, dig, position=start)
 
-    print(lagoon)
+    # print(lagoon)
     print_lagoon(lagoon)
     print()
 
@@ -154,7 +157,6 @@ def compute_part_one(file_name: str) -> int:
                 fill(lagoon, visited, x, y)
 
     print_lagoon(lagoon)
-    print(f'{len(lagoon)= }')
 
     return len(lagoon)
 
@@ -171,14 +173,26 @@ def calculate_area(coordinates: list) -> int:
         area = area + (x1 * y2) - (x2 * y1)
         length = length + abs(x2 - x1) + abs(y2 - y1)
 
-    area = abs(area) / 2
-    print(f'{area= }')
-    print(f'{length= }')
+    # for (x1, y1), (x2, y2) in zip(coordinates[:-1], coordinates[1:]):
+    #     print((x1, y1), (x2, y2))
+
+    area = int(abs(area) / 2)
+    area = area + length // 2 + 1
+
+    # using the Polygon class
     poly = Polygon(coordinates)
-    print(f'{poly.area= }, {poly.length= }')
-    area = poly.area + poly.length // 2 + 1
+    area = poly.area + poly.length // 2 + 1  # correct the area for thickness of the lines
 
     return int(area)
+
+
+def compute_part_one_alternative(file_name: str) -> int:
+    dig_plan = read_input_file(file_name)
+    start = (0, 0)
+    coordinates = covert_dig_list_to_coordinates(dig_plan, start)
+    area = calculate_area(coordinates)
+
+    return area
 
 
 def compute_part_two(file_name: str) -> int:
@@ -187,10 +201,10 @@ def compute_part_two(file_name: str) -> int:
     coordinates = covert_dig_list_to_coordinates(dig_plan, start)
     area = calculate_area(coordinates)
 
-
     return area
 
 
 if __name__ == '__main__':
     print(f"Part I: {compute_part_one('input/input18.txt')}")
+    print(f"Part I alternative: {compute_part_one_alternative('input/input18.txt')}")
     print(f"Part II: {compute_part_two('input/input18.txt')}")
