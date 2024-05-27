@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass
@@ -7,6 +8,14 @@ class Part:
     m: int = 0
     a: int = 0
     s: int = 0
+
+
+@dataclass
+class Solution:
+    x: list
+    m: list
+    a: list
+    s: list
 
 
 def read_input_file(file_name: str) -> tuple:
@@ -52,11 +61,16 @@ def process_workflow(workflows: dict, start: str, part: Part) -> bool:
 
     workflow = workflows[start]
 
+    def is_leaf(step: str) -> bool:
+        return len(step) == 1
+
+    def check_leaf(step: str) -> bool:
+        return step == "A"
+
     for step in workflow:
-        if step == "A":
-            return True
-        if step == "R":
-            return False
+        if is_leaf(step):
+            return check_leaf(step)
+
         if ":" in step:
             x, m, a, s = part.x, part.m, part.a, part.s
             expr, action = step.split(":")  # s<1351:px
@@ -72,8 +86,42 @@ def process_workflow(workflows: dict, start: str, part: Part) -> bool:
     return True
 
 
-def sum_part_rating(part: Part) -> int:
+def process_solution(solution: Solution, workflows: dict, start: str, valid_solutions: list) -> list:
+    """processes the solution based on the workflow and returns the solution stack"""
 
+    print(f'{start= }')
+    workflow = workflows[start]
+    # valid_solutions = []
+
+    for step in workflow:
+        if step == "A":
+            valid_solutions.append(solution)
+        elif step == "R":
+            continue
+        elif ":" in step:
+            x, m, a, s = 1000, 1000, 1000, 1000  # TODO modify
+            expr, action = step.split(":")  # s<1351:px
+            if eval(expr):
+                if action == "A":
+                    x = solution.x.copy()
+                    m = solution.m.copy()
+                    a = solution.a.copy()
+                    s = solution.s.copy()
+                    s = [1, 1351]
+                    new_solution = Solution(x, m, a, s)
+                    valid_solutions.append(new_solution)  # TODO modify solution range
+                elif action == "R":
+                    continue
+                else:
+                    pass
+                # process_solution(solution, workflows, start=step)  # TODO modify solution
+        else:  # process new workflow
+            process_solution(solution, workflows, start=step, valid_solutions=valid_solutions)
+
+    return valid_solutions
+
+
+def sum_part_rating(part: Part) -> int:
     return part.x + part.m + part.a + part.s
 
 
@@ -92,6 +140,17 @@ def compute_part_one(file_name: str) -> int:
     return sum_all_part_rating
 
 
+def compute_part_two(file_name: str) -> int:
+    workflows, parts = read_input_file(file_name)
+    start = "in"
+    valid_solutions = []
+
+    solution = Solution([1, 4000], [1, 4000], [1, 4000], [1, 4000])
+    output = process_solution(solution, workflows, start, valid_solutions)
+    print(f'{output= }')
+    return 0
+
+
 if __name__ == '__main__':
     print(f"Part I: {compute_part_one('input/input19.txt')}")
-    # print(f"Part II: {compute_part_two('input/input19.txt')}")
+    print(f"Part II: {compute_part_two('input/input19.txt')}")
