@@ -1,4 +1,5 @@
 import queue
+import copy
 
 
 def read_input_file(file_name: str) -> list:
@@ -29,6 +30,12 @@ def surrounding(grid, x: int, y: int) -> list:
     vals = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
     # print(f'{x= }, {y= }, {vals= }, {len(grid[0])= }, {len(grid)= }')
     return [(x_i, y_i) for (x_i, y_i) in vals if 0 <= x_i < len(grid[0]) and 0 <= y_i < len(grid)]
+
+
+def surrounding_no_limit(grid, x: int, y: int) -> list:
+    """return a list of surrounding neighbours"""
+    vals = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
+    return [(x_i, y_i) for (x_i, y_i) in vals]
 
 
 def print_grid(grid):
@@ -62,12 +69,10 @@ def count_steps(grid) -> int:
 
 def compute_part_one(file_name: str) -> int:
     grid = read_input_file(file_name)
-    # print_grid(grid)
+    print_grid(grid)
 
     start_i, start_j = find_start(grid)
     node = find_start(grid)
-    print(f'{node= }')
-    print(start_i, start_j)
 
     garden_queue = queue.Queue()
     garden_queue.put((start_i, start_j))
@@ -95,6 +100,39 @@ def compute_part_one(file_name: str) -> int:
     return number_of_steps
 
 
+def compute_part_two(file_name: str) -> int:
+    grid = read_input_file(file_name)
+    rows, cols = grid_size(grid)
+
+    # start_i, start_j = find_start(grid)
+    start_node = find_start(grid)
+
+    garden_queue = set()
+    # garden_queue.add((start_i, start_j))
+    garden_queue.add(start_node)
+    steps = 500
+    for step in range(steps):
+        print(f'{step= }')
+        temp_queue = set()
+        visited = set()
+
+        while garden_queue:
+            node = garden_queue.pop()
+            if node in visited:
+                continue
+            visited.add(node)
+            for neighbours in surrounding_no_limit(grid, node[0], node[1]):
+                x_n, y_n = neighbours[0], neighbours[1]
+                if grid[y_n % rows][x_n % cols] in ".S":
+                    temp_queue.add((x_n, y_n))
+        if step == steps - 1:
+            number_of_steps = len(temp_queue)
+            print(f'{number_of_steps= }')
+        garden_queue = copy.copy(temp_queue)
+
+    return number_of_steps
+
+
 if __name__ == '__main__':
     print(f"Part I: {compute_part_one('input/input21.txt')}")
-    # print(f"Part II: {compute_part_two('input/input21.txt')}")
+    print(f"Part II: {compute_part_two('input/input21.txt')}")

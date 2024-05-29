@@ -102,7 +102,8 @@ def compute_part_two(file_name: str) -> None:
         nxt = []
         modules["broadcaster"].update("button", False, nxt, cycles, presses)
         presses += 1
-        # print(f'{presses= }')
+        if presses%100000 == 0:
+            print(f'{presses= }')
 
         while len(nxt) > 0:
             new_nxt = []
