@@ -1,5 +1,7 @@
 # https://github.com/jmerle/advent-of-code-2023/blob/master/src/day17/part1.py
 
+# unfortunately, this takes way (> 1 dag) too long.
+
 from math import *
 
 

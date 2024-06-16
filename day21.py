@@ -110,9 +110,9 @@ def compute_part_two(file_name: str) -> int:
     garden_queue = set()
     # garden_queue.add((start_i, start_j))
     garden_queue.add(start_node)
-    steps = 500
+    steps = 64
     for step in range(steps):
-        print(f'{step= }')
+        # print(f'{step= }')
         temp_queue = set()
         visited = set()
 
@@ -129,6 +129,7 @@ def compute_part_two(file_name: str) -> int:
             number_of_steps = len(temp_queue)
             print(f'{number_of_steps= }')
         garden_queue = copy.copy(temp_queue)
+
 
     return number_of_steps
 
