@@ -1,5 +1,6 @@
 import networkx
 import itertools
+from math import prod
 
 
 def read_input_file(file_name: str) -> list:
@@ -31,8 +32,6 @@ def compose_edges(components: list) -> list:
 def compute_part_one(file_name: str) -> int:
     components = read_input_file(file_name)
     edges = compose_edges(components)
-    # print(len(edges))
-    # combs = list(itertools.combinations(edges, len(edges) - 3))
     for comb in itertools.combinations(edges, len(edges) - 3):
         graph = networkx.Graph()
         graph.add_edges_from(comb)
@@ -53,13 +52,18 @@ def compute_part_one_alter(file_name: str) -> int:
     graph = networkx.Graph()
     graph.add_edges_from(edges)
 
-    _, groups = networkx.stoer_wagner(graph)
-    product = len(groups[0] * len(groups[1]))
+    # _, groups = networkx.stoer_wagner(graph)
+    # product = len(groups[0] * len(groups[1]))
 
-    return product
+    # alternative:
+    # e = networkx.minimum_edge_cut(graph)
+    # print(e)
+    graph.remove_edges_from(networkx.minimum_edge_cut(graph))
+    print(prod([len(c) for c in networkx.connected_components(graph)]))
+
+    return 0
 
 
 if __name__ == '__main__':
-    # print(f"Part I: {compute_part_one_alter('input/input25.txt')}")
+    print(f"Part I: {compute_part_one_alter('input/input25.txt')}")
     print(f"Part I: {compute_part_one('input/input25.txt')}")
-    # print(f"Part II: {compute_part_two('input/input25.txt')}")
